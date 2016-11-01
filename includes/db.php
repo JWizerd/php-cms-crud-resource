@@ -5,7 +5,9 @@ $db['db_user'] = 'root';
 $db['db_pass'] = 'root';
 $db['db_name'] = 'cms_project';
 
+// for security reasons it is best to turn db creds into constants
 foreach ($db as $key => $value) {
+  // define method sets constants
   define(strtoupper($key), $value);
 }
 
