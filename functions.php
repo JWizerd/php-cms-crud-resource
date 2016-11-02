@@ -2,6 +2,10 @@
 
 include('includes/db.php');
 
+function get_index_directory() {
+  echo "/php-cms-crud-resource/";
+}
+
 function category_query() {
   global $connection;
 
@@ -42,7 +46,40 @@ function list_post_data_snippets($db_fetch_data) {
          "<img class='img-responsive' src='img/{$post_img_link}' alt='{$post_title} image'>" .
          "<hr>" .
          "<p>". substr($post_content, 0, 300) ."<a href='#'>...</a></p>" .
-         "<a class='btn btn-primary' href=''#''>Read More <span class='glyphicon glyphicon-chevron-right'></span></a>";
+         "<a class='btn btn-primary' href=''#''>Read More <span class='glyphicon glyphicon-chevron-right'></span></a>" .
+         "<hr>";
 
+  }
+}
+
+// get search query and produce results from db
+function search_query() {
+  if(isset($_POST['submit'])) {
+    $search = $_POST['search'];
+    search_results($search);
+  }
+}
+
+function search_results($search) {
+  global $connection;
+  $query = "SELECT * FROM posts WHERE post_tags LIKE '%$search%' ";
+  $results = mysqli_query($connection, $query);
+
+  query_validations($results);
+}
+
+function show_search_results($results) {
+  list_post_data_snippets($results);
+}
+
+function query_validations($results) {
+  if(!$results) {
+    die('Query failed' . mysqli_query($connection));
+  }
+
+  if (mysqli_num_rows($results) == 0) {
+    echo '<h2>no data for query</h2>';
+  } else {
+    show_search_results($results);
   }
 }
