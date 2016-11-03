@@ -19,7 +19,9 @@
               </div>
               <!-- /.row -->
               <div class="row">
+
                 <div class="col-xs-6">
+
                   <form action="" method="post">
                     <div class="form-group">
                       <label for="cat_title">Enter a Category</label>
@@ -29,8 +31,28 @@
                       <input type="submit" name="submit" class="btn btn-primary">
                     </div>
                   </form>
+
                 </div>
+                <!-- col-xs-6 -->
+
+                <div class="col-xs-6">
+
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Category</th>
+                        <th>Id</th>
+                      </tr>
+                    </thead>
+                    <?php show_categories_in_table(); ?>
+                  </table>
+
+                </div>
+
+
+
               </div>
+              <!-- row -->
 
           </div>
           <!-- /.container-fluid -->
