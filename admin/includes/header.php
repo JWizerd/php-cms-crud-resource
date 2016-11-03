@@ -1,3 +1,4 @@
+<?php ob_start(); ?> <!-- allow output buffering for form redirects using header() -->
 <?php include('functions.php'); ?>
 
 <!DOCTYPE html>
