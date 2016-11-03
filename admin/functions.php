@@ -107,3 +107,42 @@ function update_db_with_new_category($category_id, $cat_title) {
 }
 
 // posts.php
+
+function show_posts_in_table() {
+  global $connection;
+  $query = "SELECT * FROM posts";
+  $results = mysqli_query($connection, $query);
+
+  // taken from categories on line 17
+  validate_query($results);
+
+  display_posts_in_table($results);
+}
+
+function display_posts_in_table($results) {
+  while ($row = mysqli_fetch_assoc($results)) {
+    $post_id = $row['post_id'];
+    $post_category_id = $row['post_category_id'];
+    $post_title = $row['post_title'];
+    $post_author = $row['post_author'];
+    $post_date = $row['post_date'];
+    $post_img_file = $row['post_image'];
+    $post_content = $row['post_content'];
+    $post_tags = $row['post_tags'];
+    $post_comment_count = $row['post_comment_count'];
+    $post_status = $row['post_status'];
+
+    echo "<tr>" .
+         "<td>{$post_id}</td>" .
+         "<td>{$post_category_id}</td>" .
+         "<td><a href='#'>{$post_title}</a></td>" .
+         "<td>{$post_author}</td>" .
+         "<td>{$post_date}</td>" .
+         "<td><img style='width: 100px; height: 100px;' src='../img/{$post_img_file}' alt='{$post_img_file}' /></td>" .
+         "<td><p>". substr($post_content, 0, 150) ."<a href='#'>...</a></p></td>" .
+         "<td>{$post_tags}</td>" .
+         "<td>{$post_comment_count}</td>" .
+         "<td>{$post_status}</td>" .
+         "</tr>";
+  }
+}

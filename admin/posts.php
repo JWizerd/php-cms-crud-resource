@@ -12,9 +12,27 @@
               <div class="row">
                   <div class="col-lg-12">
                       <h1 class="page-header">
-                          Blank Page
-                          <small>Subheading</small>
+                          Posts
+                          <small>All Posts</small>
                       </h1>
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Id</th>
+                            <th>Author</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th>Image</th>
+                            <th>Tags</th>
+                            <th>Commens</th>
+                            <th>Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <?php show_posts_in_table(); ?>
+                        </tbody>
+                      </table>
                   </div>
               </div>
               <!-- /.row -->
