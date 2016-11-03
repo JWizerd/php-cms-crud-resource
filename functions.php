@@ -8,8 +8,8 @@ function get_index_directory() {
 
 function category_query() {
   global $connection;
-
-  $query = "SELECT * FROM categories";
+  // limit output of categories to 5
+  $query = "SELECT * FROM categories LIMIT 5";
   $categories = mysqli_query($connection, $query);
 
   show_categories($categories);
@@ -62,7 +62,7 @@ function search_query() {
 
 function search_results($search) {
   global $connection;
-  $query = "SELECT * FROM posts WHERE post_tags LIKE '%$search%' ";
+  $query = "SELECT * FROM posts WHERE post_tags LIKE '%$search%' OR post_title LIKE '%$search%'";
   $results = mysqli_query($connection, $query);
 
   query_validations($results);
@@ -78,7 +78,7 @@ function query_validations($results) {
   }
 
   if (mysqli_num_rows($results) == 0) {
-    echo '<h2>no data for query</h2>';
+    echo '<h2>No data for query. Please try again.</h2>';
   } else {
     show_search_results($results);
   }

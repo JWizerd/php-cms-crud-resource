@@ -15,6 +15,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <?php category_query(); ?>
+                <li><a href="<?php echo get_index_directory(); ?>admin">Admin</a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
