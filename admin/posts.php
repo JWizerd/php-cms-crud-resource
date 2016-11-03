@@ -14,25 +14,29 @@
                       <h1 class="page-header">
                           Posts
                           <small>All Posts</small>
+                          <a href="http://localhost/php-cms-crud-resource/admin/posts.php?source=post_add" class="btn btn-primary">Add Post</a>
                       </h1>
-                      <table class="table table-hover">
-                        <thead>
-                          <tr>
-                            <th>Id</th>
-                            <th>Author</th>
-                            <th>Title</th>
-                            <th>Category</th>
-                            <th>Date</th>
-                            <th>Image</th>
-                            <th>Tags</th>
-                            <th>Commens</th>
-                            <th>Date</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <?php show_posts_in_table(); ?>
-                        </tbody>
-                      </table>
+                      <?php
+                      if(isset($_GET['source'])) {
+                        $source = $_GET['source'];
+                      } else {
+                        $source = '';
+                      }
+
+                      switch ($source) {
+                        case 'post_add':
+                          include('includes/post_add.php');
+                          break;
+
+                        case 'hello':
+                          echo "sweet";
+                          break;
+
+                        default:
+                          include('includes/post_view_all.php');
+                          break;
+                      }
+                      ?>
                   </div>
               </div>
               <!-- /.row -->
