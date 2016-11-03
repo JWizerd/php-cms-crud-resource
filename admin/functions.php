@@ -28,7 +28,8 @@ function display_categories_in_table($results) {
     $cat_id = $row['cat_id'];
     echo "<tr><td>{$cat_title}</td>" .
          "<td>{$cat_id}</td>" .
-         "<td><a href='categories.php?delete={$cat_id}'>DELETE</a></td></tr>";
+         "<td><a href='categories.php?delete={$cat_id}'>DELETE</a></td>" .
+         "<td><a href='categories.php?edit={$cat_id}'>EDIT</a></td></tr>";
   }
 }
 
@@ -61,6 +62,44 @@ function delete_category_query($cat_id) {
   $query = "DELETE FROM categories WHERE cat_id = {$cat_id} ";
   $delete_category = mysqli_query($connection, $query);
   if(!$delete_category) {
+    die('error establishing database' . mysqli_error($connection));
+  } else {
+    header('Location: categories.php');
+  }
+}
+
+function update_category() {
+  if(isset($_GET['edit'])) {
+    $category_id = $_GET['edit'];
+    update_category_query($category_id);
+  }
+}
+
+function update_category_query($category_id) {
+  global $connection;
+  $query = "SELECT * FROM categories WHERE cat_id = $category_id ";
+  $select_category_id = mysqli_query($connection, $query);
+
+  if(!$select_category_id) {
+    die('error establishing database connection' . mysqli_error($connection));
+  }
+
+  while($row = mysqli_fetch_assoc($select_category_id)) {
+    $cat_title = $row['cat_title'];
+    echo "<input type='text' name='cat_title' class='form-control' value='{$cat_title}'>";
+  }
+
+  if(isset($_POST['update_category'])) {
+    update_db_with_new_category($category_id, $cat_title);
+  }
+}
+
+function update_db_with_new_category($category_id, $cat_title) {
+  global $connection;
+  $cat_title = strtoupper($_POST['cat_title']);
+  $query = "UPDATE categories SET cat_title = '$cat_title' WHERE cat_id = $category_id ";
+  $update_category = mysqli_query($connection, $query);
+  if(!$update_category) {
     die('error establishing database' . mysqli_error($connection));
   } else {
     header('Location: categories.php');
