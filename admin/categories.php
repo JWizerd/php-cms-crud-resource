@@ -1,3 +1,4 @@
+<?php ob_start(); ?>
 <?php include('includes/header.php'); ?>
 
     <div id="wrapper">
@@ -25,19 +26,22 @@
                   <form action="" method="post">
                     <div class="form-group">
                       <label for="cat_title">Enter a Category</label>
-                      <input type="text" name="cat_title" class="form-control">
+                      <input type="text" name="cat_title" class="form-control" required>
                     </div>
                     <div class="form-group">
                       <input type="submit" name="submit" class="btn btn-primary">
                     </div>
                   </form>
 
+                  <?php create_category(); ?>
+                  <?php delete_category(); ?>
+
                 </div>
                 <!-- col-xs-6 -->
 
                 <div class="col-xs-6">
 
-                  <table class="table">
+                  <table class="table table-hover">
                     <thead>
                       <tr>
                         <th>Category</th>
@@ -48,8 +52,6 @@
                   </table>
 
                 </div>
-
-
 
               </div>
               <!-- row -->
