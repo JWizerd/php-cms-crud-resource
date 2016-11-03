@@ -12,10 +12,20 @@
 
     $post_content          = $_POST['post_content'];
     $post_date             = date('d-m-y');
-    $post_commment_count   = 4;
+    $post_comment_count   = 4;
 
     // method used for choosing where you want images uploaded to
     move_uploaded_file($post_image_temp, "../img/$post_image");
+
+    $query = "INSERT INTO posts(post_category_id, post_title, post_author, post_date, post_image, post_content, post_tags, post_comment_count, post_status) ";
+
+    $query .= "VALUES({$post_cat_id}, '{$post_title}', '{$post_author}', now(), '{$post_image}', '{$post_content}', '{$post_tags}', {$post_comment_count}, '{$post_status}') ";
+
+    $the_post = mysqli_query($connection, $query);
+
+    if(!$the_post) {
+      die('error establishing database' . mysqli_error($connection));
+    }
   }
 ?>
 
