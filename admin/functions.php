@@ -4,6 +4,18 @@ include('../includes/db.php');
 
 // categories.php
 
+function select_categories_options_in_form() {
+  global $connection;
+  $query = "SELECT * FROM categories";
+  $categories = mysqli_query($connection, $query);
+  validate_query($categories);
+  while($row = mysqli_fetch_assoc($categories)) {
+    $cat_id = $row['cat_id'];
+    $cat_title = $row['cat_title'];
+    echo "<option value='{$cat_id}'>{$cat_title}</option>";
+  }
+}
+
 function show_categories_in_table() {
   global $connection;
   $query = "SELECT * FROM categories";
@@ -143,6 +155,8 @@ function display_posts_in_table($results) {
          "<td>{$post_tags}</td>" .
          "<td>{$post_comment_count}</td>" .
          "<td>{$post_status}</td>" .
+         "<td><a href='posts.php?source=post_edit&edit={$post_id}'>EDIT</a></td>" .
+         "<td><a href='posts.php?delete={$post_id}'>DELETE</a></td>" .
          "</tr>";
   }
 }
@@ -186,5 +200,144 @@ function create_post_query($post_title, $post_cat_id, $post_author, $post_tags, 
 
   if(!$the_post) {
     die('error establishing database' . mysqli_error($connection));
+  }
+}
+
+// delete post
+function delete_post() {
+  if(isset($_GET['delete'])) {
+    $post_id = $_GET['delete'];
+    delete_post_query($post_id);
+  }
+}
+
+function delete_post_query($post_id) {
+  global $connection;
+  $query = "DELETE FROM posts WHERE post_id = {$post_id} ";
+  $delete_post = mysqli_query($connection, $query);
+  if (!$delete_post) {
+    die('error establishing database' . myqsli_error($connection));
+  } else {
+    header('Location: posts.php');
+  }
+}
+
+function update_post() {
+  if(isset($_GET['edit'])) {
+    $post_id = $_GET['edit'];
+    show_current_post_data($post_id);
+    update_post_query($post_id);
+  }
+}
+
+function show_current_post_data($post_id) {
+  global $connection;
+  $query = "SELECT * FROM posts WHERE post_id = $post_id ";
+  $select_posts_by_id = mysqli_query($connection, $query);
+
+  if(!$select_posts_by_id) {
+    die('error establishing database connection' . mysqli_error($connection));
+  }
+
+  while($row = mysqli_fetch_assoc($select_posts_by_id)) {
+    $post_title = $row['post_title'];
+      echo "<div class='form-group'>" .
+           "<label for='post_title'>Post Title</label>" .
+           "<input type='text' name='post_title' class='form-control' value='{$post_title}'>" .
+           "</div>";
+
+    $post_cat_id= $row['post_category_id'];
+      echo "<div class='form-group'>" .
+           "<label for='post_cat_id'>Post Category</label>" .
+           "<select style='display:block;' name='post_cat_id' id=''>";
+      select_categories_options_in_form();
+      echo "</select>" .
+           "</div>";
+
+    $post_author= $row['post_author'];
+      echo "<div class='form-group'>" .
+           "<label for='post_author'>Post Author</label>" .
+           "<input type='text' name='post_author' class='form-control' value='{$post_author}'>" .
+           "</div>";
+
+    $post_tags  = $row['post_tags'];
+      echo "<div class='form-group'>" .
+           "<label for='post_tags'>Post tags</label>" .
+           "<input type='text' name='post_tags' class='form-control' value='{$post_tags}'>" .
+           "</div>";
+
+    $post_image = $row['post_image'] ;
+      echo "<div class='form-group'>" .
+           "<label for='post_image'>Post image</label>" .
+           "<img style='display: block; height: 150px;' src='../img/{$post_image}' />" .
+           "<input type='file' name='post_image'>" .
+           "</div>";
+
+    $post_status= $row['post_status'];
+      echo "<div class='form-group'>" .
+           "<label for='post_status'>Post status</label>" .
+           "<input type='text' name='post_status' class='form-control' value='{$post_status}'>" .
+           "</div>";
+
+    $post_content= $row['post_content'];
+      echo "<div class='form-group'>" .
+           "<label for='post_content'>Post Content</label>" .
+           "<textarea type='text' class='form-control' name='post_content' rows='10' required>{$post_content}</textarea>" .
+           "</div>";
+
+      echo "<div class='form-group'>" .
+           "<input type='submit' name='update_post' class='btn btn-primary' value='Update'>" .
+           "</div>";
+  }
+}
+
+function update_post_query($post_id) {
+
+  if(isset($_POST['update_post'])) {
+    $post_title            = $_POST['post_title'];
+    $post_cat_id           = $_POST['post_cat_id'];
+    $post_author           = $_POST['post_author'];
+    $post_tags             = $_POST['post_tags'];
+    $post_image            = $_FILES['post_image']['name'];
+    $post_image_temp       = $_FILES['post_image']['tmp_name'];
+    $post_status           = $_POST['post_status'];
+    $post_content          = $_POST['post_content'];
+
+    transport_uploaded_images($post_image_temp, $post_image);
+
+    if(empty($post_image)) {
+      global $connection;
+      $query = "SELECT * FROM posts WHERE post_id = {$post_id} ";
+      $results = mysqli_query($connection, $query);
+
+      validate_query($results);
+
+      while($row = mysqli_fetch_assoc($results)) {
+        $post_image = $row['post_image'];
+      }
+    }
+
+    update_db_with_new_post($post_id, $post_title, $post_cat_id, $post_author, $post_tags, $post_status, $post_image, $post_content);
+  }
+}
+
+function update_db_with_new_post($post_id, $post_title, $post_cat_id, $post_author, $post_tags, $post_status, $post_image, $post_content) {
+  global $connection;
+
+  $query =  "UPDATE posts SET ";
+  $query .= "post_title = '{$post_title}', ";
+  $query .= "post_category_id = {$post_cat_id}, ";
+  $query .= "post_author = '{$post_author}', ";
+  $query .= "post_tags = '{$post_tags}', ";
+  $query .= "post_image = '{$post_image}', ";
+  $query .= "post_status = '{$post_status}', ";
+  $query .= "post_content = '{$post_content}' ";
+  $query .= "WHERE post_id = {$post_id} ";
+
+  $update_post = mysqli_query($connection, $query);
+  if(!$update_post) {
+    die('error establishing database' . mysqli_error($connection));
+  } else {
+    header('Location: posts.php');
   }
 }

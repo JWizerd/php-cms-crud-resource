@@ -16,6 +16,7 @@
                           <small>All Posts</small>
                           <a href="http://localhost/php-cms-crud-resource/admin/posts.php?source=post_add" class="btn btn-primary">Add Post</a>
                       </h1>
+                      <p style="color:red;"><?php echo delete_post(); ?></p>
                       <?php
                       if(isset($_GET['source'])) {
                         $source = $_GET['source'];
@@ -28,8 +29,8 @@
                           include('includes/post_add.php');
                           break;
 
-                        case 'hello':
-                          echo "sweet";
+                        case 'post_edit':
+                          include('includes/post_edit.php');
                           break;
 
                         default:
