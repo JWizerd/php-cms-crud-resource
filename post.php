@@ -10,7 +10,7 @@
             <div class="col-lg-8">
 
             <?php the_post(); ?>
-
+            <?php include('includes/comments.php'); ?>
             </div>
 
             <?php include('includes/sidebar.php'); ?>
@@ -19,5 +19,4 @@
         <!-- /.row -->
 
         <hr>
-
 <?php include('includes/footer.php'); ?>

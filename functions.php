@@ -47,6 +47,10 @@ function post_category_query($cat_id) {
     die('error establishing database connection' . mysqli_error($connection));
   }
 
+  if (mysqli_num_rows($posts) == 0) {
+    echo '<h2>No Posts pertaining to this Category. SOWWWY.</h2>';
+  }
+
   list_post_data_snippets($posts);
 }
 
