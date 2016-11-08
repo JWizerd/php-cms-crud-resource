@@ -17,8 +17,9 @@ function category_query() {
 
 function show_categories($db_fetch_data) {
   while($row = mysqli_fetch_assoc($db_fetch_data)) {
+    $cat_id = $row['cat_id'];
     $cat_title = $row['cat_title'];
-    echo "<li><a href=''>{$cat_title}</a></li>";
+    echo "<li><a href='category.php?cat_id={$cat_id}'>{$cat_title}</a></li>";
   }
 }
 
@@ -26,6 +27,25 @@ function show_all_posts() {
   global $connection;
   $query = "SELECT * FROM posts";
   $posts = mysqli_query($connection, $query);
+
+  list_post_data_snippets($posts);
+}
+
+function show_posts_by_category() {
+  if(isset($_GET['cat_id'])) {
+    $cat_id = $_GET['cat_id'];
+    post_category_query($cat_id);
+  }
+}
+
+function post_category_query($cat_id) {
+  global $connection;
+  $query = "SELECT * FROM posts WHERE post_category_id = $cat_id ";
+  $posts = mysqli_query($connection, $query);
+
+  if (!$posts) {
+    die('error establishing database connection' . mysqli_error($connection));
+  }
 
   list_post_data_snippets($posts);
 }
@@ -38,17 +58,56 @@ function list_post_data_snippets($db_fetch_data) {
     $post_img_link = $row['post_image'];
     $post_content = $row['post_content'];
     $post_tags = $row['post_tags'];
+    $post_id = $row['post_id'];
 
-    echo "<h2><a href='#'>{$post_title}</a></h2>" .
+    echo "<h2><a href='post.php?p_id={$post_id}'>{$post_title}</a></h2>" .
          "<p>by {$post_author}</p>" .
          "<p><span class='glyphicon glyphicon-time'></span> Posted on {$post_date}</p>" .
          "<hr>" .
          "<img class='img-responsive' src='img/{$post_img_link}' alt='{$post_title} image'>" .
          "<hr>" .
          "<p>". substr($post_content, 0, 300) ."<a href='#'>...</a></p>" .
-         "<a class='btn btn-primary' href=''#''>Read More <span class='glyphicon glyphicon-chevron-right'></span></a>" .
+         "<a class='btn btn-primary' href='post.php?p_id={$post_id}'>Read More <span class='glyphicon glyphicon-chevron-right'></span></a>" .
          "<hr>";
+  }
+}
 
+function the_post() {
+  if(isset($_GET['p_id'])) {
+    $post_id = $_GET['p_id'];
+    post_query_filter_by_id($post_id);
+  }
+}
+
+function post_query_filter_by_id($post_id) {
+  global $connection;
+  $query = "SELECT * FROM posts WHERE post_id = $post_id ";
+  $results = mysqli_query($connection, $query);
+
+  if(!$results) {
+    die('Query failed' . mysqli_query($connection));
+  }
+
+  format_post_content_by_id($results);
+}
+
+function format_post_content_by_id($results) {
+  while ($row = mysqli_fetch_assoc($results)) {
+    $post_title = $row['post_title'];
+    $post_author = $row['post_author'];
+    $post_date = $row['post_date'];
+    $post_tags = $row['post_tags'];
+    $post_image = $row['post_image'];
+    $post_content = $row['post_content'];
+
+    echo "<h1>{$post_title}</h1>" .
+         "<p>by {$post_author}</p>" .
+         "<p><span class='glyphicon glyphicon-time'></span> Posted on {$post_date}</p>" .
+         "<p><span class='glyphicon glyphicon-tag'></span> {$post_tags}</p>" .
+         "<hr>" .
+         "<img class='img-responsive' src='img/{$post_image}' alt='{$post_title} image'>" .
+         "<hr>" .
+         "<p>{$post_content}</p>";
   }
 }
 

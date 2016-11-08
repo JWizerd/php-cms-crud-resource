@@ -41,7 +41,7 @@ function display_categories_in_table($results) {
     echo "<tr><td>{$cat_title}</td>" .
          "<td>{$cat_id}</td>" .
          "<td><a href='categories.php?delete={$cat_id}'>DELETE</a></td>" .
-         "<td><a href='categories.php?edit={$cat_id}'>EDIT</a></td></tr>";
+         "<td><a href='categories.php?cat_id={$cat_id}'>EDIT</a></td></tr>";
   }
 }
 
@@ -81,8 +81,8 @@ function delete_category_query($cat_id) {
 }
 
 function update_category() {
-  if(isset($_GET['edit'])) {
-    $category_id = $_GET['edit'];
+  if(isset($_GET['cat_id'])) {
+    $category_id = $_GET['cat_id'];
     update_category_query($category_id);
   }
 }
@@ -155,7 +155,7 @@ function display_posts_in_table($results) {
          "<td>{$post_tags}</td>" .
          "<td>{$post_comment_count}</td>" .
          "<td>{$post_status}</td>" .
-         "<td><a href='posts.php?source=post_edit&edit={$post_id}'>EDIT</a></td>" .
+         "<td><a href='posts.php?source=post_edit&p_id={$post_id}'>EDIT</a></td>" .
          "<td><a href='posts.php?delete={$post_id}'>DELETE</a></td>" .
          "</tr>";
   }
@@ -223,8 +223,8 @@ function delete_post_query($post_id) {
 }
 
 function update_post() {
-  if(isset($_GET['edit'])) {
-    $post_id = $_GET['edit'];
+  if(isset($_GET['p_id'])) {
+    $post_id = $_GET['p_id'];
     show_current_post_data($post_id);
     update_post_query($post_id);
   }
@@ -248,7 +248,7 @@ function show_current_post_data($post_id) {
 
     $post_cat_id= $row['post_category_id'];
       echo "<div class='form-group'>" .
-           "<label for='post_cat_id'>Post Category</label>" .
+           "<label for='post_cat_id'>Category</label>" .
            "<select style='display:block;' name='post_cat_id' id=''>";
       select_categories_options_in_form();
       echo "</select>" .

@@ -8,8 +8,10 @@
     <input type="text" class="form-control" name="post_title" required>
   </div>
   <div class="form-group">
-    <label for="post_category_id">Post Category Id</label>
-    <input type="number" class="form-control" name="post_category_id" required>
+    <label for="post_category_id">Post Category</label>
+    <select style="display:block;" name="post_category_id">
+      <?php select_categories_options_in_form(); ?>
+    </select>
   </div>
   <div class="form-group">
     <label for="post_author">Post Author</label>

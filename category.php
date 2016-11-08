@@ -9,7 +9,7 @@
             <!-- Blog Post Content Column -->
             <div class="col-lg-8">
 
-            <?php the_post(); ?>
+            <?php show_posts_by_category(); ?>
 
             </div>
 
